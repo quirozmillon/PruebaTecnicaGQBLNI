@@ -1,10 +1,9 @@
-﻿using Datos.Entidades;
-using Negocio.Abstracciones.Datos;
+﻿
+using Datos.Abstracciones;
+using Datos.Entidades;
 using Negocio.Abstracciones.Servicios;
 using Negocio.Dto.Clientes;
-using System;
-using System.Collections.Generic;
-using System.Text;
+
 
 namespace Negocio
 {

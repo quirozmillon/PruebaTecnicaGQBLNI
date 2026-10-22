@@ -1,7 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
+using Datos.Abstracciones;
+using Datos.Repositorio;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Negocio.Abstracciones.Datos;
-using Negocio.Abstracciones.Servicios;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,6 +16,8 @@ namespace Datos
             services.AddDbContext<PruebaDbContext>(options => options.UseSqlite(connectionString));
             services.AddScoped<IClientesRepositorio, ClientesRepositorio>();
             services.AddScoped<ITrabajoUnico, TrabajoUnico>();
+            services.AddScoped<ICuentaRepositorio, CuentaRepositorio>();
+            services.AddScoped<ITransaccionRepositorio, TransaccionRepositorio>();
 
             return services;
         }

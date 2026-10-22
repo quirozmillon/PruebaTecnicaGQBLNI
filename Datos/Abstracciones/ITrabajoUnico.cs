@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Negocio.Abstracciones.Datos
+namespace Datos.Abstracciones
 {
     public interface ITrabajoUnico
     {

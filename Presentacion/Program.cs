@@ -1,5 +1,6 @@
 using Datos;
 using Negocio;
+using Presentacion.Excepcion;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,9 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddDataAccess(builder.Configuration.GetConnectionString("DefaultConnection"));
 builder.Services.AddLogicaNegocio();
+builder.Services.AddExceptionHandler<ExcepcionGlobal>();
+builder.Services.AddProblemDetails();
+
 
 builder.Services.AddSwaggerGen(options => {
     options.SwaggerDoc("v1", new() { Title = "My API", Version = "v1" });
@@ -27,9 +31,21 @@ builder.Services.AddSwaggerGen(options => {
 
 });
 
-var app = builder.Build();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
 
-// Configure the HTTP request pipeline.
+    var app = builder.Build();
+    app.UseCors("AllowAll");
+
+
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -41,6 +57,8 @@ if (app.Environment.IsDevelopment())
         options.DisplayRequestDuration();
     });
 }
+
+app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
 

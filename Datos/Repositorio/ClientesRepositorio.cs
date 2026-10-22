@@ -1,12 +1,12 @@
 ﻿using Datos;
+using Datos.Abstracciones;
 using Datos.Entidades;
 using Microsoft.EntityFrameworkCore;
-using Negocio.Abstracciones.Datos;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Negocio.Abstracciones.Servicios
+namespace Datos.Repositorio
 {
     public class ClientesRepositorio(PruebaDbContext dbContext) : IClientesRepositorio
     {

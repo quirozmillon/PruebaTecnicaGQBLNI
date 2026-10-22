@@ -1,4 +1,4 @@
-﻿using Negocio.Abstracciones.Datos;
+﻿using Datos.Abstracciones;
 using System;
 using System.Collections.Generic;
 using System.Text;

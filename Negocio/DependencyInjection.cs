@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Negocio.Abstracciones;
 using Negocio.Abstracciones.Servicios;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,10 @@ namespace Negocio
         public static IServiceCollection AddLogicaNegocio(this IServiceCollection services)
         {
             services.AddScoped<IClienteServicio, ClienteServicios>();
+            services.AddScoped<ICuentaServicios, CuentaServicios>();
+            services.AddScoped<IGeneradorNoCuenta, GeneradorNoCuenta>();
             return services;
         }
+
     }
 }
