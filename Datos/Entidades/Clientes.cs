@@ -21,5 +21,7 @@ namespace Datos.Entidades
         /// Ingresos mensuales del cliente
         /// </summary>
         public decimal IngresosMensuales { get; set; }
+
+        public DateTime FechaCreacion { get; set; }
     }
 }

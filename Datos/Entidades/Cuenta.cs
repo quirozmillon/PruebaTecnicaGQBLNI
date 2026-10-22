@@ -12,5 +12,15 @@ namespace Datos.Entidades
         public decimal SaldoInicial { get; set; }
 
         public decimal Saldo { get; set; }
+
+        public DateTime FechaCreacion { get; set; }
+
+        public virtual Clientes Cliente { get; set; }
+
+        public virtual ICollection<Transaccion> Transacciones { get; set; }
+
+
     }
+
+
 }
