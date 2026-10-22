@@ -14,5 +14,12 @@ namespace Presentacion.Controllers
             var resultado = await clienteServicio.CrearAsync(solicitud);
             return CreatedAtAction(nameof(Crear), new { id = resultado.ClienteId }, resultado);
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> BuscarPorId(int id)
+        {
+            var resultado = await clienteServicio.BuscarPorIdAsync(id);
+            return Ok(resultado);
+        }
     }
 }

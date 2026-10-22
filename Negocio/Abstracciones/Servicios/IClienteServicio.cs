@@ -8,5 +8,7 @@ namespace Negocio.Abstracciones.Servicios
     public interface IClienteServicio 
     {
         Task<ClienteRespuesta> CrearAsync(CrearClienteSolicitud solicitud);
+        Task<ClienteRespuesta> BuscarPorIdAsync(int id);
+
     }
 }

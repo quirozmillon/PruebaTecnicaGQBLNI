@@ -13,6 +13,21 @@ namespace Negocio
         ITrabajoUnico trabajoUnico
         ) : IClienteServicio
     {
+        public async Task<ClienteRespuesta> BuscarPorIdAsync(int id)
+        {
+            var cliente = await clienteRepositorio.ObtenerPorId(id);
+
+            return new ClienteRespuesta
+            {
+                ClienteId = cliente.ClienteId,
+                NombreCompleto = cliente.NombreCompleto,
+                FechaNacimiento = cliente.FechaNacimiento,
+                Sexo = cliente.Sexo,
+                IngresosMensuales = cliente.IngresosMensuales,
+                FechaCreacion = cliente.FechaCreacion
+            };
+        }
+
         public async Task<ClienteRespuesta> CrearAsync(CrearClienteSolicitud solicitud)
         {
             var nuevoCliente = new Clientes
