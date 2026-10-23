@@ -13,5 +13,7 @@ namespace Negocio.Abstracciones.Servicios
         Task<CuentaRespuesta> BuscarPorIdAsync(string numeroCuenta);
         Task<CuentaRespuesta> DepositoAsync(TransaccionSolicitud solicitud);
         Task<CuentaRespuesta> RetiroAsync(TransaccionSolicitud solicitud);
+        Task<IList<CuentaRespuesta>> ObtenerTodasCuentasAsync();
+        Task<IList<TransaccionRespuesta>> ObtenerTransaccionesPorCuentaAsync(string numeroCuenta);
     }
 }

@@ -36,9 +36,16 @@ namespace Negocio
 
         public async Task<CuentaRespuesta> CrearAsync(CuentaSolicitud solicitud)
         {
+            var nuevoNumero = generadorNoCuenta.GenerarNoCuenta();
+            var cuentaExistente = await cuentaRepositorio.ObtenerPorIdCuenta(nuevoNumero);
+            if (cuentaExistente != null)
+            {
+                throw new ExcepcionNegocio("Ya existe una cuenta con el número generado. Intente nuevamente.", StatusCodes.Status400BadRequest);
+            }
+
             var nuevaCuenta = new Cuenta
             {
-                NumeroCuenta = generadorNoCuenta.GenerarNoCuenta(),
+                NumeroCuenta = nuevoNumero,
                 SaldoInicial = solicitud.SaldoInicial,
                 Saldo = solicitud.SaldoInicial,
                 FechaCreacion = DateTime.UtcNow,
@@ -103,6 +110,34 @@ namespace Negocio
                 ClienteId = cuenta.ClienteId
             };
 
+        }
+
+        public async Task<IList<CuentaRespuesta>> ObtenerTodasCuentasAsync()
+        {
+            var resultado = await cuentaRepositorio.ObtenerCuentasAsync();
+            return resultado
+                    .Select(c => new CuentaRespuesta
+                    {
+                        NumeroCuenta = c.NumeroCuenta,
+                        SaldoInicial = c.SaldoInicial,
+                        Saldo = c.Saldo,
+                        FechaCreacion = c.FechaCreacion,
+                        ClienteId = c.ClienteId
+                    }).ToList();
+        }
+
+        public async Task<IList<TransaccionRespuesta>> ObtenerTransaccionesPorCuentaAsync(string numeroCuenta)
+        {
+            var resultado = await transaccionRepositorio.ObtenerPorNumeroCuentaAsync(numeroCuenta);
+            return resultado
+                    .Select(t => new TransaccionRespuesta
+                    {
+                        TransaccionId = t.TransaccionId,
+                        Fecha = t.FechaProceso,
+                        Descripcion = t.Descripcion,
+                        TipoTransaccion = t.Tipo,
+                        Monto = t.Monto
+                    }).ToList();
         }
 
         public async Task<CuentaRespuesta> RetiroAsync(TransaccionSolicitud solicitud)

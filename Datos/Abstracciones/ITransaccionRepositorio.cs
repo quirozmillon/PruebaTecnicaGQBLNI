@@ -8,5 +8,7 @@ namespace Datos.Abstracciones
     public interface ITransaccionRepositorio
     {
         void Agregar(Transaccion transaccion);
+
+        Task<IList<Transaccion>> ObtenerPorNumeroCuentaAsync(string numeroCuenta);
     }
 }

@@ -4,6 +4,7 @@ using FluentAssertions;
 using Moq;
 using Negocio;
 using Negocio.Abstracciones;
+using Negocio.Dto.Cuentas;
 using Negocio.Dto.Transacciones;
 using Negocio.Excepciones;
 
@@ -135,11 +136,56 @@ namespace NegocioPruebaUnitaria.Servicios
         {            
             var generadorMock = new GeneradorNoCuenta();
             var nuevaCuenta = generadorMock.GenerarNoCuenta();
+            var formatoFecha = DateTime.Now.ToString("yyyyMMdd");
 
             Assert.NotNull(nuevaCuenta);            
             Assert.StartsWith("ACC-", nuevaCuenta);
             Assert.Matches(@"^ACC-\d{8}-\d{4}$", nuevaCuenta);
+            Assert.Equal(17, nuevaCuenta.Length);
+            Assert.Equal($"ACC-{formatoFecha}-", nuevaCuenta.Substring(0, 13));
 
+        }
+
+        [Fact]
+        public async Task ValidarCuentaDuplicidadExcepcion()
+        {
+            var cuentaRepositorioMock = new Mock<ICuentaRepositorio>();
+            var trabajoUnicoMock = new Mock<ITrabajoUnico>();
+            var generadorNoCuentaMock = new Mock<IGeneradorNoCuenta>();
+            var transaccionRepositorioMock = new Mock<ITransaccionRepositorio>();
+
+            var nuevoClienteMock = new Clientes
+            {
+                ClienteId = 1,
+                NombreCompleto = "Juan Perez",
+                Sexo = Datos.Enum.Genero.Masculino,
+                FechaNacimiento = DateTime.UtcNow.AddYears(-30),
+                IngresosMensuales = 1000m
+            };
+
+            var generadorMock = new GeneradorNoCuenta();
+            var nuevaCuenta = generadorMock.GenerarNoCuenta();
+
+            var cuentaMock = new Cuenta { NumeroCuenta = nuevaCuenta, Saldo = 100, ClienteId = nuevoClienteMock.ClienteId, SaldoInicial = 100 };
+
+            cuentaRepositorioMock
+                .Setup(repo => repo.ObtenerPorIdCuenta(nuevaCuenta))
+                .ReturnsAsync(cuentaMock);
+
+            generadorNoCuentaMock
+                .Setup(repo => repo.GenerarNoCuenta())
+                .Returns(nuevaCuenta);
+
+            var servicio = new CuentaServicios(
+                cuentaRepositorioMock.Object,
+                trabajoUnicoMock.Object,
+                generadorNoCuentaMock.Object,
+                transaccionRepositorioMock.Object
+            );
+
+            Func<Task> accion = async () => await servicio.CrearAsync(new CuentaSolicitud { SaldoInicial = 500, ClienteId = nuevoClienteMock.ClienteId });
+
+            await accion.Should().ThrowAsync<ExcepcionNegocio>();
         }
 
     }

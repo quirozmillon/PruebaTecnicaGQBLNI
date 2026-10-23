@@ -28,6 +28,11 @@ namespace Datos.Abstracciones
             }
         }
 
+        public async Task<IList<Cuenta>> ObtenerCuentasAsync()
+        {
+            return await dbContext.Cuentas.AsNoTracking().ToListAsync();
+        }
+
         public Task<Cuenta?> ObtenerPorIdCuenta(string numeroCuenta)
         {
             return dbContext.Cuentas.FirstOrDefaultAsync(c => c.NumeroCuenta == numeroCuenta);

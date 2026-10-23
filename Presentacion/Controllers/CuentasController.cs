@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Negocio.Abstracciones.Servicios;
 using Negocio.Dto.Cuentas;
 using Negocio.Dto.Transacciones;
@@ -15,6 +16,13 @@ namespace Presentacion.Controllers
         {
             var resultado = await cuentaServicios.CrearAsync(solicitud);
             return CreatedAtAction(nameof(Crear), new { numeroCuenta = resultado.NumeroCuenta }, resultado);
+        }
+
+        [HttpGet("lista")]
+        public async Task<IActionResult> Lista()
+        {
+            var resultado = await cuentaServicios.ObtenerTodasCuentasAsync();
+            return Ok(resultado);
         }
 
         [HttpGet("{numeroCuenta}")]
@@ -35,6 +43,13 @@ namespace Presentacion.Controllers
         public async Task<IActionResult> Retiro(string numeroCuenta, [FromBody] TransaccionSolicitud solicitud)
         {
             var resultado = await cuentaServicios.RetiroAsync(solicitud);
+            return Ok(resultado);
+        }
+
+        [HttpPost("{numeroCuenta}/historial")]
+        public async Task<IActionResult> Historial(string numeroCuenta)
+        {
+            var resultado = await cuentaServicios.ObtenerTransaccionesPorCuentaAsync(numeroCuenta);
             return Ok(resultado);
         }
 

@@ -14,5 +14,7 @@ namespace Datos.Abstracciones
         void Eliminar(string numeroCuenta);
 
         void Actualizar(Cuenta cuenta);
+
+        Task<IList<Cuenta>> ObtenerCuentasAsync();
     }
 }
