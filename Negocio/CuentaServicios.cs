@@ -51,6 +51,10 @@ namespace Negocio
                     Descripcion = "Depósito inicial"
                 } }
             };
+            if(string.IsNullOrEmpty(nuevaCuenta.NumeroCuenta))
+            {
+                throw new ExcepcionNegocio("No se pudo generar un número de cuenta válido.", StatusCodes.Status500InternalServerError);
+            }
             cuentaRepositorio.Agregar(nuevaCuenta);
             await trabajoUnico.GuardarCambiosAsync();
             return new CuentaRespuesta
@@ -65,6 +69,11 @@ namespace Negocio
 
         public async Task<CuentaRespuesta> DepositoAsync(TransaccionSolicitud solicitud)
         {
+            if (string.IsNullOrEmpty(solicitud.NumeroCuenta))
+            {
+                throw new ExcepcionNegocio("La cuenta no puede estar vacia.", StatusCodes.Status404NotFound);
+            }
+            
             var cuenta = await cuentaRepositorio.ObtenerPorIdCuenta(solicitud.NumeroCuenta);
             if (cuenta == null)
             {
@@ -98,6 +107,11 @@ namespace Negocio
 
         public async Task<CuentaRespuesta> RetiroAsync(TransaccionSolicitud solicitud)
         {
+            if (string.IsNullOrEmpty(solicitud.NumeroCuenta))
+            {
+                throw new ExcepcionNegocio("La cuenta no puede estar vacia.", StatusCodes.Status404NotFound);
+            }
+
             var cuenta = await cuentaRepositorio.ObtenerPorIdCuenta(solicitud.NumeroCuenta);
             if (cuenta == null)
             {
